@@ -1,7 +1,7 @@
-const { Given, When } = require("@wdio/cucumber-framework");
+const { Given, When, Then } = require("@wdio/cucumber-framework");
 const LoginPage = require('../../POM/FaceBook/LoginPage');
 const LoginErrorPage = require('../../POM/FaceBook/LoginErrorPage');
-const Commands = require('../../POM/Commands');
+const Commands = require('../../POM/Utils/Commands');
 const { expect } = require("chai");
 
 const loginPage = new LoginPage();
@@ -13,18 +13,31 @@ const commands = new Commands();
  *  -> a regular expression which helps to map scenario-steps with functions or step-definitions
  */
 
-Given(/^I am on facebook$/, async () => {
+Given(/^I am on (facebook|hotels|darksky|amazon)$/, async (url) => {
 
-    await browser.url('/');
-
-    await browser.pause(2000);
+    switch (url.toLowerCase()) {
+        case 'facebook':
+            await browser.url('/');
+            break;
+        case 'hotels':
+            await browser.url('https://www.hotels.com/');
+            break;
+        case 'darksky':
+            await browser.url('https://darksky.net');
+            break;
+        case 'amazon':
+            await browser.url('https://amazon.com/');
+            break;
+        default:
+            break;
+    }
 
 })
 
 When(/^I type '(.+)' as (username|password)$/, async (data, fieldName) => {
     
     switch (fieldName) {
-        case 'email':
+        case 'username':
             await loginPage.emailField(data);
             break;
         case 'password':
@@ -36,14 +49,100 @@ When(/^I type '(.+)' as (username|password)$/, async (data, fieldName) => {
 
 })
 
-When(/^I click login button$/, async () => {
+When(/^I click on login button$/, async () => {
 
     await loginPage.clickLoginButton();
 
 })
 
-When(/^$/, async () => {
+Then(/^I verify error is displayed$/, async () => {
 
     expect(await errorPage.isLoginErrorDisplayed(), 'Login error is not displayed').to.be.true;
 
+})
+
+When(/^I click on '(.+)'$/, async (link) => {
+
+    switch (link.toLowerCase()) {
+        case 'instagram':
+            await loginPage.openInstagram();
+            break;
+
+        case 'oculus':
+            await loginPage.openOculus();
+            break;
+
+        case 'meta pay':
+            await loginPage.openMetaPay();
+            break;
+
+        case 'portal':
+            await loginPage.openPortal();
+            break;
+
+        case 'create new account':
+            await loginPage.clickCreateNewAcc();
+            break;
+    
+        default:
+            break;
+    }
+
+})
+
+Then(/^I verify '(.+)' opens in a new window$/, async (link) => {
+
+    const currentHandle = await commands.getHandle();
+    const allHandles = await commands.getHandles();
+
+    for (const handle of allHandles) {
+        if (handle !== currentHandle) {
+            await commands.switchWindow(handle);
+            break;
+        }
+    }
+    const newHandle = await commands.getHandle();
+
+    const res = newHandle !== currentHandle;
+
+    expect(res, `${link} was not launched in new window`).to.be.true;
+
+})
+
+Then(/^I verify '(.+)' is enabled$/, async (field) => {
+
+    switch (field.toLowerCase()) {
+        case 'email field':
+            const emailField = await loginPage.isEmailFieldEnabled();
+            expect(emailField, 'Email field is not enabled').to.be.true;
+            break;
+
+        case 'password field':
+            const passField = await loginPage.isPassFieldEnabled();
+            expect(passField, 'Password field is not enabled').to.be.true;
+            break;
+    
+        case 'login button':
+            const loginButton = await loginPage.isLoginButtonEnabled();
+            expect(loginButton, 'Login button is not enabled').to.be.true;
+            break;
+
+        default:
+            break;
+    }
+})
+
+Then(/^I verify email field is enabled$/, async () => {
+    const emailField = await loginPage.isEmailFieldEnabled();
+    expect(emailField, 'Email field is not enabled').to.be.true;
+})
+
+Then(/^I verify password field is enabled$/, async () => {
+    const passField = await loginPage.isPassFieldEnabled();
+    expect(passField, 'Password field is not enabled').to.be.true;
+})
+
+Then(/^I verify login button is enabled$/, async () => {
+    const loginButton = await loginPage.isLoginButtonEnabled();
+    expect(loginButton, 'Login button is not enabled').to.be.true;
 })

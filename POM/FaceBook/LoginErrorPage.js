@@ -1,4 +1,4 @@
-const Commands = require('../Commands');
+const Commands = require('../Utils/Commands');
 
 class LoginErrorPage {
 
@@ -6,8 +6,7 @@ class LoginErrorPage {
 
     // Locators for web-Elements on the LoginPage
 
-    errorMessage = '//div[contains(text(), "email or mobile")]';
-
+    errorMessage = '//div[starts-with(text(), "The email")]';
 
 
 
@@ -19,7 +18,11 @@ class LoginErrorPage {
     }
 
     async isLoginErrorDisplayed () {
-        await this.commands.isElementedDisplayed(this.errorMessage);
+        return await this.commands.isElementedDisplayed(this.errorMessage);
+    }
+
+    async isPasswordErrorDisplayed () {
+        return await this.commands.isElementedDisplayed(this.passwordError);
     }
 
 

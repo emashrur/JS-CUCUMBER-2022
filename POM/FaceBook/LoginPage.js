@@ -1,4 +1,4 @@
-const Commands = require("../Commands");
+const Commands = require("../Utils/Commands");
 
 
 class LoginPage {
@@ -64,15 +64,15 @@ class LoginPage {
     }
 
     async isEmailFieldEnabled () {
-        await this.commands.isElementEnabled(this.loginEmail);
+        return await this.commands.isElementEnabled(this.loginEmail);
     }
 
     async isPassFieldEnabled () {
-        await this.commands.isElementEnabled(this.loginPassWord);
+        return await this.commands.isElementEnabled(this.loginPassWord);
     }    
 
     async isLoginButtonEnabled () {
-        await this.commands.isElementEnabled(this.loginButton);
+        return await this.commands.isElementEnabled(this.loginButton);
     }
 
 }

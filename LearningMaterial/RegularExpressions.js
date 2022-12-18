@@ -20,4 +20,9 @@
  * .* -> 0 or more instances of anything
  * .+ -> 1 or more instances of anything
  * 
+ * 
+ * When using range use square brackets []
+ *  -> [abcd]
+ *      -> any instance of a or b or c or d
+ * 
  */
