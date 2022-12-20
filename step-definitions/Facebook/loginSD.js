@@ -10,23 +10,23 @@ const commands = new Commands();
 
 
 
-Given(/^I am on (facebook|darksky|amazon)$/, async (url) => {
+// Given(/^I am on (facebook|darksky|amazon)$/, async (url) => {
 
-    switch (url.toLowerCase()) {
-        case 'facebook':
-            await browser.url('/');
-            break;
-        case 'darksky':
-            await browser.url('https://darksky.net');
-            break;
-        case 'amazon':
-            await browser.url('https://amazon.com/');
-            break;
-        default:
-            break;
-    }
+//     switch (url.toLowerCase()) {
+//         case 'facebook':
+//             await browser.url('/');
+//             break;
+//         case 'darksky':
+//             await browser.url('https://darksky.net');
+//             break;
+//         case 'amazon':
+//             await browser.url('https://amazon.com/');
+//             break;
+//         default:
+//             break;
+//     }
 
-})
+// })
 
 When(/^I type '(.+)' as (username|password)$/, async (data, fieldName) => {
     

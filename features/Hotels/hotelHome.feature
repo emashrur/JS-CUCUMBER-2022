@@ -1,17 +1,15 @@
 Feature: Code Test
-    ​
-    # Score - 40
+
     @codeTest @codeTest-1
     Scenario Outline: Verify user is able to change language
         Given I am on hotels
-        When I change langugage to <languageOption>
+        When I change language to <languageOption>
         Then I verify language got changed to <language>
-        ​
         Examples:
             | languageOption           | language |
             | Español (Estados Unidos) | Español  |
             | English (United States)  | English  |
-    ​
+
     @codeTest @codeTest-2
     Scenario: Verify limit for adults count in a room
         Given I am on hotels

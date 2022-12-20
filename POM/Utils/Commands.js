@@ -36,9 +36,9 @@ class Commands {
     }
 
     async getElementText (locator) {
-        await $(locator).waitForDisplayed({
+        await $(locator).waitForEnabled({
             timeout: 60000,
-            timeoutMsg: 'WelElement is not displayed'
+            timeoutMsg: 'WebElement is not displayed'
         })
         return await $(locator).getText();
     }
@@ -108,6 +108,9 @@ class Commands {
         await $(locator).moveTo()
     }
 
+    async sleep (seconds) {
+        await browser.pause(seconds*1000);
+    }
 
 }
 
