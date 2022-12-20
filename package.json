@@ -6,6 +6,7 @@
   },
   "devDependencies": {
     "@wdio/allure-reporter": "^8.0.7",
+    "@wdio/browserstack-service": "^8.0.11",
     "@wdio/cli": "^8.0.13",
     "@wdio/cucumber-framework": "^8.0.7",
     "@wdio/firefox-profile-service": "^8.0.11",

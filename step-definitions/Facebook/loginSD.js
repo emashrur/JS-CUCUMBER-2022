@@ -8,19 +8,13 @@ const loginPage = new LoginPage();
 const errorPage = new LoginErrorPage();
 const commands = new Commands();
 
-/**
- * Glue Code
- *  -> a regular expression which helps to map scenario-steps with functions or step-definitions
- */
 
-Given(/^I am on (facebook|hotels|darksky|amazon)$/, async (url) => {
+
+Given(/^I am on (facebook|darksky|amazon)$/, async (url) => {
 
     switch (url.toLowerCase()) {
         case 'facebook':
             await browser.url('/');
-            break;
-        case 'hotels':
-            await browser.url('https://www.hotels.com/');
             break;
         case 'darksky':
             await browser.url('https://darksky.net');
@@ -146,3 +140,4 @@ Then(/^I verify login button is enabled$/, async () => {
     const loginButton = await loginPage.isLoginButtonEnabled();
     expect(loginButton, 'Login button is not enabled').to.be.true;
 })
+
