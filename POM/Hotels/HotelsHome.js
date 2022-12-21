@@ -20,7 +20,6 @@ class HotelsHome {
     // functions
 
     
-
     async changeLanguage(language) {
 
         await this.commands.clickElement(this.languageSelected);
