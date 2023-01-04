@@ -1,4 +1,5 @@
 const Commands = require('../Utils/Commands');
+const Dates = require('../Utils/Dates');
 
 
 class HotelsHome {
@@ -12,9 +13,20 @@ class HotelsHome {
     saveButton = '//select[@id="language-selector"]/following::button';
     currentLanguage = '//button[@data-stid="button-type-picker-trigger"]//div/div';
     customizeTravelers = '//button[@data-stid="open-room-picker"]';
-    minusAdult = '//*[local-name()="svg" and @aria-label="Decrease the number of adults in room 1"]';
+    minusAdult = '//input[@aria-label="Adults "]/preceding-sibling::button';
     numOfAdults = '//input[@aria-label="Adults "]';
-    plusAdults = '//*[local-name()="svg" and @aria-label="Increase the number of adults in room 1"]';
+    plusAdults = '//input[@aria-label="Adults "]/following-sibling::button';
+    adultMinusDisabled = '//input[@aria-label="Adults "]/preceding-sibling::button[@disabled]';
+    adultPlusDisabled = '//input[@aria-label="Adults "]/following-sibling::button[@disabled]';
+    datesCalendar = '//button[@data-stid="open-date-picker"]';
+    monthsDisplayed = '//h2[@class="uitk-date-picker-month-name uitk-type-medium"]';
+    disabledDates = '//td//button[@disabled]';
+    getAppButton = '#submitBtn';
+    phoneNumber = '#phoneNumber';
+    phoneNumberError = '#phoneNumber-error';
+    signInButton = '//button[text()="Sign in"]';
+    feedbackLink = '//a[text()="Feedback"]';
+    
 
 
     // functions
@@ -59,25 +71,52 @@ class HotelsHome {
 
     async isMinusEnabled () {
 
-        return await this.commands.isElementEnabled(this.minusAdult);
+        // return await this.commands.isElementEnabled(this.minusAdult);
+        return await this.commands.getAttrValue(this.adultMinusDisabled, 'disabled');
 
     }
 
     async isPlusEnabled() {
 
-        return await this.commands.isElementEnabled(this.plusAdults);
+        // return await this.commands.isElementEnabled(this.plusAdults);
+        return await this.commands.getAttrValue(this.adultPlusDisabled, 'disabled');
 
     }
 
     async setAdultMaximum () {
 
-        await this.commands.clickElement(this.customizeTravelers);
         let numAdults = await this.commands.getAttrValue(this.numOfAdults, 'value');
         numAdults = Number(numAdults);
         for (let i = 1 ; i <= 14 - numAdults ; i++) {
             this.commands.clickElement(this.plusAdults);
         }
         await browser.pause(2000);
+
+    }
+
+    async openDates () {
+        await this.commands.clickElement(this.datesCalendar);
+    }
+
+    async verifyMonth () {
+
+        const expectedDate = Dates.getCurrentDate('Month');
+        const monthElements = await this.commands.findAllWebElements(this.monthsDisplayed);
+        let displayedMonths = [];
+        for (let monthElement of monthElements) {
+            const thisMonth = await this.commands.getElementText(monthElement);
+            displayedMonths.push(thisMonth);
+        }
+
+        console.log('\n-----');
+        console.log(displayedMonths);
+        console.log('-----\n');
+
+    }
+
+    async viewGetApp () {
+
+        await this.commands.scrollToView(this.getAppButton);
 
     }
 
