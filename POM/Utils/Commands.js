@@ -14,9 +14,13 @@ class Commands {
        browser.waitUntil(async () => {
 
         const allWebElements = await $$(locator);
-        return allWebElements.length >= numOfElements;
+        allWebElements.length >= numOfElements;
         
        })
+       
+       const allWebElements = await $$(locator);
+       return allWebElements;
+
     }
 
     async typeInField(locator, value) {
@@ -41,6 +45,24 @@ class Commands {
             timeoutMsg: 'WebElement is not displayed'
         })
         return await $(locator).getText();
+    }
+
+    async getAllElementTexts (locator) {
+
+        await $$(locator).waitForDisplayed({
+            timeout: 60000,
+            timeoutMsg: 'WebElements are not displayed'
+        })
+
+        const allElements = await $$(locator);
+        let allElementTexts = [];
+
+        for (let element of allElements) {
+            allElementTexts.push(await element.getText());
+        }
+
+        return allElementTexts
+
     }
 
     async getAttrValue (locator, attrName) {
@@ -85,31 +107,39 @@ class Commands {
     }
 
     async isElementedDisplayed (locator) {
-        await $(locator).waitForDisplayed({
+        await $(locator).waitForExist({
             timeout: 60000,
-            timeoutMsg: 'WebElement is not displayed' 
+            timeoutMsg: 'WebElement does not exist' 
         })
         return await $(locator).isDisplayed();
     }
 
     async isElementEnabled (locator) {
-        await $(locator).waitForEnabled({
+        await (await $(locator)).waitForDisplayed({
             timeout: 60000,
-            timeoutMsg: 'WebElement is not enabled'
+            timeoutMsg: 'WebElement is not displayed'
         })
         return await $(locator).isEnabled();
     }
 
     async hoverMouse (locator) {
-        await $(locator).waitForClickable({
+        await $(locator).waitForDisplayed({
             timeout: 60000,
-            timeoutMsg: 'WebElement is not clickable'
+            timeoutMsg: 'WebElement is not displayed'
         })
         await $(locator).moveTo()
     }
 
     async sleep (seconds) {
         await browser.pause(seconds*1000);
+    }
+
+    async scrollToView (locator) {
+        await $(locator).waitForExist({
+            timeout: 60000,
+            timeoutMsg: 'WebElement does not exist'
+        })
+        await $(locator).scrollIntoView()
     }
 
 }
