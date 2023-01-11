@@ -210,6 +210,13 @@ Then(/^I verify "THANK YOU FOR YOUR FEEDBACK" message is displayed$/, async () =
 
 })
 
+When(/^I search "(.+)"$/, async (input) => {
+
+    await hotels.enterSearch(input);
+    await commands.sleep(3);
+
+})
+
 
 
 

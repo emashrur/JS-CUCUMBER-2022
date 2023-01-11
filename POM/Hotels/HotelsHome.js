@@ -34,13 +34,29 @@ class HotelsHome {
     plusChildren = '//input[starts-with(@aria-label, "Children")]/following-sibling::button';
     childAgeTo = '#age-traveler_selector_children_age_selector-0-';
     doneButton = '//button[text()="Done"]';
+    searchButton = '//button[@aria-label="Going to"]';
+    searchBar = '#destination_form_field';
+    changeDatesButton = '#date_form_field-btn';
 
     
 
     // functions
 
+
+    async enterDate () {
+
+        this.commands.clickElement(this.changeDatesButton);
+    }
+
+    async enterSearch (input) {
+        
+        await this.commands.clickElement(this.searchButton);
+
+        await this.commands.typeInField(this.searchBar, input);
+
+    }
     
-    async changeLanguage(language) {
+    async changeLanguage (language) {
 
         await this.commands.clickElement(this.languageSelected);
         
