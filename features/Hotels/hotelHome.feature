@@ -62,13 +62,75 @@ Feature: Hotels
     #     And I click Done
     #     Then I verify total number of guests in sum of adults and children as same as selected on step #3 and #4
 
-    @secondSprint @secondSprint-1
-    Scenario: Hotels: Verify filter-by and sort-by functionality works as expected
+    # @secondSprint @secondSprint-1
+    # Scenario: Hotels: Verify filter-by and sort-by functionality works as expected
+    #     Given I am on hotels
+    #     When I search "Manhattan, NY"
+    #     And I enter check-in date as Feb-10-2023
+    #     And I enter check-out date as Feb-16-2023
+    #     And I click on search button
+    #     And I click on 5 stars from star-rating filter
+    #     And I select "Price" from sort-by dropdown
+    #     Then I verify the search results match 5 star-rating as selected in the above step
+    #     And I verify all hotels are listed in increasing price order
+
+    # @secondSprint @secondSprint-2
+    # Scenario: Hotels: Verify Verification message for invalid sign in credentials
+    #     Given I am on hotels
+    #     When I click on Sign In
+    #     And I click Sign In button
+    #     And I enter invalid email address "invalidUser@domain.com"
+    #     And I enter invalid password "123456"
+    #     And I click Sign In button to submit credentials
+    #     Then I verify error message is displayed "Email and password don't match"
+
+    # @secondSprint @secondSprint-3
+    # Scenario: Hotels: Verify error message for invalid data in SignUp form
+    #     Given I am on hotels
+    #     When I click on Sign In
+    #     And I click on Sign up link
+    #     And I type invalid email address "#@#&##"
+    #     And I type invalid first name "$?&?$?"
+    #     And I type invalid last name "$?&?$?"
+    #     And I type "test" as password
+    #     Then I verify invalid email error is displayed
+    #     And I verify invalid first name error is displayed
+    #     And I verify invalid last name error is displayed
+    #     And I verify "Keep me signed in" checkbox is displayed and enabled
+    #     And I verify "Continue" button is displayed but disabled
+
+    # @secondSprint @secondSprint-4
+    # Scenario Outline: Verify password strength bar and messages
+    #     Given I am on hotels
+    #     When I click on Sign In
+    #     And I click on Sign up link
+    #     And I enter "user@test.com" as email address
+    #     And I enter "fUser" as first name
+    #     And I enter "lUser" as last name
+    #     And I type <password> as password
+    #     Then I verify Password strength bar is <strengthBar> filled
+    #     And I verify Password strength message is <strengthMsg>
+
+    # Examples:
+    #         | password     | strengthBar | strengthMsg |
+    #         | abcd         | not         | weak        |
+    #         | abcd@123     | half        | Weak        |
+    #         | abcd@12324   | almost      | Strong      |
+    #         | abcd@12@pl@2 | completely  | Very Strong |
+
+    
+    @secondSprint @secondSprint-5
+    Scenario: Hotels: Verify TermsAndConditions link and PrivacyStatements link open correct page on new tab
         Given I am on hotels
-        When I search "Manhattan, NY"
-        And I enter check-in date as Feb-10-2023
-        And I enter check-out date as Feb-16-2023
-        
+        When I click on Sign In
+        And I click on Sign up link
+        And I click "Terms and Conditions" link
+        Then I verify "Terms and Conditions" page opens in new tab
+        # And I verify "Last Revised" date format is as MM/dd/yy
+        When I return to Sign Up page
+        And I click "Privacy Statement" link
+        Then I verify "Privacy Statement" page opens in new tab
+        # And I verify "Last Updated" date format is as dd MMMM, yyyy
 
 
 

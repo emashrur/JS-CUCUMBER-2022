@@ -10,18 +10,29 @@ class Commands {
         return await $(locator);
     }
 
-    async findAllWebElements (locator, numOfElements) {
-       browser.waitUntil(async () => {
-
-        const allWebElements = await $$(locator);
-        allWebElements.length >= numOfElements;
-        
-       })
-       
-       const allWebElements = await $$(locator);
-       return allWebElements;
-
+    async findAllWebElement(locator) {
+        await browser.waitUntil(async () => {
+            const totalElements = await $$(locator);
+            return totalElements.length >= 1
+        }, {
+            timeout: 60000,
+            timeoutMsg: 'No more than one element'
+        });
+        return await $$(locator);
     }
+
+    // async findAllWebElements (locator, numOfElements) {
+    //     browser.waitUntil(async () => {
+ 
+    //      const allWebElements = await $$(locator);
+    //      allWebElements.length >= numOfElements;
+         
+    //     })
+        
+    //     const allWebElements = await $$(locator);
+    //     return allWebElements;
+ 
+    //  }
 
     async typeInField(locator, value) {
         await $(locator).waitForEnabled({
@@ -115,9 +126,9 @@ class Commands {
     }
 
     async isElementEnabled (locator) {
-        await (await $(locator)).waitForDisplayed({
+        await (await $(locator)).waitForExist({
             timeout: 60000,
-            timeoutMsg: 'WebElement is not displayed'
+            timeoutMsg: 'WebElement does not exist'
         })
         return await $(locator).isEnabled();
     }

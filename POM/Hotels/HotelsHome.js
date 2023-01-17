@@ -25,7 +25,8 @@ class HotelsHome {
     getAppButton = '#submitBtn';
     phoneNumber = '#phoneNumber';
     phoneNumberError = '#phoneNumber-error';
-    signInButton = '//button[text()="Sign in"]';
+    signInLink = '//button[text()="Sign in"]';
+    signInButton = '=Sign in';
     feedbackLink = '//a[text()="Feedback"]';
     prevMonths = '//button[@data-stid="date-picker-paging"]/preceding-sibling::button';
     nextMonths = '//button[@data-stid="date-picker-paging"]/following-sibling::button';
@@ -33,26 +34,44 @@ class HotelsHome {
     minusChildren = '//input[starts-with(@aria-label, "Children")]/preceding-sibling::button';
     plusChildren = '//input[starts-with(@aria-label, "Children")]/following-sibling::button';
     childAgeTo = '#age-traveler_selector_children_age_selector-0-';
-    doneButton = '//button[text()="Done"]';
-    searchButton = '//button[@aria-label="Going to"]';
+    travelerDoneButton = '//button[text()="Done"]';
+    searchOpen = '//button[@aria-label="Going to"]';
     searchBar = '#destination_form_field';
     changeDatesButton = '#date_form_field-btn';
+    doneButton = '//button[@data-stid="apply-date-picker"]';
+    searchButton = '#search_button';
+    submitSearch = '//button[starts-with(@aria-label,"Search for")]';
+    signUpLocator = '*=Sign up';
+    
 
     
 
     // functions
 
 
-    async enterDate () {
+    async enterSearch () {
 
-        this.commands.clickElement(this.changeDatesButton);
-    }
-
-    async enterSearch (input) {
-        
         await this.commands.clickElement(this.searchButton);
 
+    }
+
+    async findDate (month, date) {
+
+        const dateFinder = '//button[starts-with(@aria-label,"' + month.toString() + '")and @data-day="' + date.toString() + '"]';
+        await this.commands.clickElement(dateFinder);
+
+    }
+    
+    async enterDate () {
+
+        await this.commands.clickElement(this.changeDatesButton);
+    }
+
+    async typeSearch (input) {
+        
+        await this.commands.clickElement(this.searchOpen);
         await this.commands.typeInField(this.searchBar, input);
+        await this.commands.clickElement(this.submitSearch);
 
     }
     
@@ -159,7 +178,7 @@ class HotelsHome {
 
     async signIn () {
 
-        await this.commands.clickElement(this.signInButton);
+        await this.commands.clickElement(this.signInLink);
 
     }
 
@@ -251,7 +270,7 @@ class HotelsHome {
 
     async submitTravelerInfo () {
 
-        await this.commands.clickElement(this.doneButton);
+        await this.commands.clickElement(this.travelerDoneButton);
 
     }
 
@@ -295,8 +314,20 @@ class HotelsHome {
             }
         }
 
-        await this.commands.sleep(5);
+        await this.commands.sleep(2);
         
+    }
+
+    async clickSignInButton() {
+
+        await this.commands.clickElement(this.signInButton);
+
+    }
+
+    async clickSignUpButton () {
+
+        await this.commands.clickElement(this.signUpLocator);
+
     }
 
 }

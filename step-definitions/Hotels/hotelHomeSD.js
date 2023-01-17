@@ -3,10 +3,16 @@ const Commands = require('../../POM/Utils/Commands');
 const { expect } = require("chai");
 const HotelsHome = require("../../POM/Hotels/HotelsHome");
 const DirectWord = require("../../POM/Hotels/DirectWord");
+const SearchPage = require("../../POM/Hotels/SearchPage");
+const SignInPage = require("../../POM/Hotels/SignInPage");
+const SignUpPage = require("../../POM/Hotels/SignUpPage");
 
 const commands = new Commands();
 const hotels = new HotelsHome();
 const dWord = new DirectWord();
+const search = new SearchPage();
+const signIn = new SignInPage();
+const signUp = new SignUpPage();
 
 
 Given(/^I am on hotels$/, async () => {
@@ -212,10 +218,280 @@ Then(/^I verify "THANK YOU FOR YOUR FEEDBACK" message is displayed$/, async () =
 
 When(/^I search "(.+)"$/, async (input) => {
 
-    await hotels.enterSearch(input);
-    await commands.sleep(3);
+    await hotels.typeSearch(input);
 
 })
+
+When(/^I enter check-(in|out) date as (.+)-(.+)-2023$/, async (status, month, date) => {
+
+    if (status === 'in') {
+        await hotels.enterDate();
+    }
+    await hotels.findDate(month, date);
+    if (status === 'out') {
+        await commands.clickElement(hotels.doneButton);
+    }
+
+})
+
+When(/^I click on search button$/, async () => {
+
+    await hotels.enterSearch();
+
+})
+
+When(/^I click on (.+) stars from star-rating filter$/, async (stars) => {
+
+    await search.selectRating(stars);
+
+})
+
+When(/^I select "(.+)" from sort-by dropdown$/, async (sortBy) => {
+
+    await search.sortBySelect(sortBy);
+
+})
+
+When(/^I verify the search results match (.+) star-rating as selected in the above step$/, async (stars) => {
+
+    expect(await search.verifyStars(stars), 'Search results ratings do not match expected star-rating value').to.be.true;
+
+})
+
+When(/^I verify all hotels are listed in increasing price order$/, async () => {
+
+    expect(await search.verifyPriceLeastToGreatest(), 'Prices are not listed in increasing price order').to.be.true;
+
+})
+
+When(/^I click Sign In button$/, async () => {
+
+    const hotelsTab = await commands.getHandle();
+    
+    await hotels.clickSignInButton();
+
+    const allTabs = await commands.getHandles();
+    for (tab of allTabs) {
+        if (tab !== hotelsTab) {
+            await commands.switchWindow(tab)
+            break;
+        }
+    }
+
+})
+
+When(/^I enter invalid email address "(.+)"$/, async (input) => {
+
+    await signIn.enterEmail(input);
+
+})
+
+When(/^I enter invalid password "(.+)"$/, async (input) => {
+
+    await signIn.enterPassword(input);
+
+})
+
+When(/^I click Sign In button to submit credentials$/, async () => {
+
+    await signIn.clickSignInButton();
+
+})
+
+Then(/^I verify error message is displayed "Email and password don't match"$/, async () => {
+
+    const errorDisplayed = await signIn.verifyError();
+    expect(errorDisplayed,'Error message is not displayed').to.be.true;
+
+})
+
+When(/^I click on Sign up link$/, async () => {
+
+    const hotelsTab = await commands.getHandle();
+
+    await hotels.clickSignUpButton()
+    
+    const allTabs = await commands.getHandles();
+    for (tab of allTabs) {
+        if (tab !== hotelsTab) {
+            await commands.switchWindow(tab)
+            break;
+        }
+    }
+
+})
+
+When(/^I type invalid email address "(.+)"$/, async (input) => {
+
+    await signUp.enterEmail(input);
+
+})
+
+When(/^I type invalid first name "(.+)"$/, async (input) => {
+
+    await signUp.enterFirstName(input);
+
+})
+
+When(/^I type invalid last name "(.+)"$/, async (input) => {
+
+    await signUp.enterLastName(input);
+
+})
+
+Then(/^I verify invalid email error is displayed$/, async () => {
+
+    expect(await signUp.verifyEmailError(), 'Email error is not displayed').to.be.true;
+
+})
+
+Then(/^I verify invalid first name error is displayed$/, async () => {
+
+    expect(await signUp.verifyFirstNameError(), 'First name error is not displayed').to.be.true;
+
+})
+
+Then(/^I verify invalid last name error is displayed$/, async () => {
+
+    expect(await signUp.verifyLastNameError(), 'Last name error is not displayed').to.be.true;
+
+})
+
+Then(/^I verify "Keep me signed in" checkbox is displayed and enabled$/, async () => {
+
+    expect(await signUp.verifyCheckBoxDisplayed(), 'Keep-me-signed-in checkbox is not displayed').to.be.true;
+    expect(await signUp.verifyCheckBoxEnabled(), 'Keep-me-signed-in checkbox is not enabled').to.be.true;
+
+
+})
+
+Then(/^I verify "Continue" button is displayed but disabled$/, async () => {
+
+    expect(await signUp.verifyContinueButtonDisplayed(), 'Continue button is not displayed').to.be.true;
+    expect(await signUp.verifyContinueButtonEnabled(), 'Continue button is Enabled').to.be.false;
+
+})
+
+When(/^I enter "(.+)" as email address$/, async (input) => {
+
+    await signUp.enterEmail(input);
+
+})
+
+When(/^I enter "(.+)" as first name$/, async (input) => {
+
+    await signUp.enterFirstName(input);
+
+})
+
+When(/^I enter "(.+)" as last name$/, async (input) => {
+
+    await signUp.enterLastName(input);
+
+})
+
+When(/^I type (.+) as password$/, async (input) => {
+
+    await signUp.enterPassword(input);
+
+})
+
+Then(/^I verify Password strength bar is (.+) filled$/, async (fillAmount) => {
+
+    expect(await signUp.checkStrength(fillAmount), `Strength bar is not ${fillAmount} filled`).to.be.true;
+
+})
+
+Then(/^I verify Password strength message is (.+)$/, async (strength) => {
+
+    expect(await signUp.checkStrengthText(strength), `Strength message is not ${strength.toLowerCase()}`).to.be.true;
+    const mainHandle = await commands.getHandle();
+    const allHandles = await commands.getHandles();
+    for (const handle of allHandles) {
+        if (handle !== mainHandle) {
+            await commands.switchWindow(handle);
+            await commands.closeTab();
+        }
+        await commands.switchWindow(mainHandle); 
+    }
+
+})
+
+When(/^I click "(.+)" link$/, async (link) => {
+
+    switch (link.toLowerCase()) {
+        case "terms and conditions":
+            await signUp.openTermsAndConditions();
+            break;
+        case "privacy statement":
+            await signUp.openPrivacyStatement();
+            break;    
+        default:
+            break;
+    }
+
+})
+
+Then(/^I verify "(.+)" page opens in new tab$/, async (page) => {
+
+    if (page.toLowerCase() === "terms and conditions") {
+        const mainHandle = await commands.getHandle();
+            const allHandles = await commands.getHandles();
+            for (const handle of allHandles) {
+                await commands.switchWindow(handle);
+                const windowTitle = await browser.getTitle();
+                if (windowTitle.includes('Terms') && handle !== mainHandle) {
+                    return true;
+                    break;
+                }
+                return false;
+            }
+    } else if (page.toLowerCase() === "privacy statement") {
+        const mainHandle = await commands.getHandle();
+            const allHandles = await commands.getHandles();
+            for (const handle of allHandles) {
+                if (handle !== mainHandle) {
+                    return true;
+                    break;
+                }
+                return false;
+                break;
+            }
+    }
+})
+
+When(/^I return to Sign Up page$/, async () => {
+
+    const allHandles = await commands.getHandles();
+    for (const handle of allHandles) {
+        await commands.switchWindow(handle);
+        const windowTitle = await browser.getTitle();
+        if (windowTitle.includes('Create')) {
+            break;
+        }
+    }
+
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
